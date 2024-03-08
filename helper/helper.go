@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func DrawGameBoard(store [3][3]string) {
+func DrawGameBoard(store [3][3]string) string {
 	var displayBoard [3][3]string
 
 	for i := 0; i < 3; i++ {
@@ -21,8 +21,11 @@ func DrawGameBoard(store [3][3]string) {
 		}
 	}
 
-	fmt.Printf("%v  | %v  |  %v  \n--------------------------\n%v  | %v  |  %v \n--------------------------\n%v  | %v  |  %v\n",
+	message := fmt.Sprintf("%v  | %v  |  %v  \n--------------------------\n%v  | %v  |  %v \n--------------------------\n%v  | %v  |  %v\n",
 		displayBoard[0][2], displayBoard[1][2], displayBoard[2][2], displayBoard[0][1], displayBoard[1][1], displayBoard[2][1], displayBoard[0][0], displayBoard[1][0], displayBoard[2][0])
+
+	fmt.Println(message)
+	return message
 }
 
 func ValidateInput(input string, store [3][3]string) (int, int, error) {
@@ -41,10 +44,6 @@ func ValidateInput(input string, store [3][3]string) (int, int, error) {
 	y, err := strconv.Atoi(parts[1])
 	if err != nil {
 		return 0, 0, errors.New("Wrong y coordinate")
-	}
-
-	if x < 0 || x > 2 || y < 0 || y > 2 {
-		return 0, 0, errors.New("Wrong input")
 	}
 
 	if len(store[x][y]) > 0 {
