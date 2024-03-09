@@ -5,26 +5,35 @@ import (
 	"testing"
 )
 
+func setupTest(t *testing.T) ([3][3]string, func(t *testing.T)) {
+	fmt.Println("set up")
+	store := [3][3]string{
+		{"X", "", ""},
+		{"", "O", ""},
+		{"", "", "X"},
+	}
+
+	return store, func(t *testing.T) {
+		fmt.Println("clean up")
+	}
+}
+
 func TestDrawGameBoard(t *testing.T) {
-	var store [3][3]string
-	store[0][0] = "X"
-	store[1][1] = "O"
-	store[2][2] = "X"
+	store, tearDownTest := setupTest(t)
+	defer tearDownTest(t)
 
 	expectedBoard := fmt.Sprintf("%v  | %v  |    %v    \n--------------------------\n%v  |   %v    |  %v \n--------------------------\n  %v    | %v  |  %v\n",
 		"(0,2)", "(1,2)", store[2][2], "(0,1)", store[1][1], "(2,1)", store[0][0], "(1,0)", "(2,0)")
 	board := DrawGameBoard(store)
-	fmt.Println(expectedBoard)
+
 	if board != expectedBoard {
 		t.Fatal(`Board not correctly drawn`)
 	}
 }
 
 func TestValidateInput(t *testing.T) {
-	var store [3][3]string
-	store[0][0] = "X"
-	store[1][1] = "O"
-	store[2][2] = "X"
+	store, tearDownTest := setupTest(t)
+	defer tearDownTest(t)
 
 	x, y, err := ValidateInput("0", store)
 	if err.Error() != "Wrong input" {
@@ -47,10 +56,8 @@ func TestValidateInput(t *testing.T) {
 }
 
 func TestFullPathExists(t *testing.T) {
-	var store [3][3]string
-	store[0][0] = "X"
-	store[1][1] = "O"
-	store[2][2] = "X"
+	store, tearDownTest := setupTest(t)
+	defer tearDownTest(t)
 
 	if FullPathExists(store) {
 		t.Error("Winning Path should not exist")
